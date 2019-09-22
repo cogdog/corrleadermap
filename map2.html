@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>CorrLead Map</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="favicon.ico" href="images/favicon.ico" />
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="backstretch.js"></script>	
+
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			font-family: Helvetica, Arial, sans-serif;
+			font-size: 0.9em;
+			color: #fff;
+		}
+		#map {
+			width: 800px;
+			height: 400px;
+			margin: 10px auto;
+			background-color:#000;
+		}
+		
+		#content {
+			margin:3rem 15%;
+			
+		}
+		
+		a {color:lightskyblue; text-decoration: none;}
+		
+		a:hover {text-decoration: underline;}
+		
+		h1 {
+			text-align:center;
+			margin-bottom:0;
+		}
+	</style>
+
+	
+</head>
+<body>
+
+
+<div id='map'></div>
+
+<div id="content">
+<h1>CorrLead Map Demo 2</h1>
+<p>Map of Leadership terrain covering three major regions; within are 10 points of interest each with suggested trails and off trail exploration. All elements are merely for demonstration purpose, and to test functionality of map interface.</p>
+
+<p>Map managed using <a href="https://leafletjs.com/">LeafletJS</a>, land map generated with <a href="https://azgaar.github.io/Fantasy-Map-Generator/">Fantasy Map Generator</a>.</p>
+
+<p>
+<img width="25" height="41" alt="marker-icon-2x" src="images/marker-icon-2x.png"> Area (unit)<br />
+<img width="18" height="18" alt="dest-icon" src="images/dest-icon.png"> Destination (on or off trail)
+</p>
+
+<h2>Map Demos</h2>
+
+<ul>
+	<li><a href="map1.html">First Prototype</a> - square map, first experiment with Leaflet. Tooltips on map.</li>
+	<li><strong>Second Prototype</strong> - base map generated with different tool, rectangular map.</li>
+		<li><a href="layers.html">Layers</a> - Modification of second prototype, testing using the top right interface to toggle different layers or parts of map, on an off.</li>
+</ul>
+
+<hr />
+
+<p><em>Background image: Monochrome version of <a href="https://commons.wikimedia.org/wiki/File:British_columbia_1896.jpg">MediaWiki Commons public domain image "British Columbia 1896"</a>.</em></p>
+
+
+</div>
+
+<script>
+
+ $.backstretch("images/bc.jpg");
+
+	var map = L.map('map', {
+		crs: L.CRS.Simple,
+		minZoom: -1
+	});
+
+	var bounds = [[0,0], [400,800]];
+	var image = L.imageOverlay('images/land2.jpg', bounds).addTo(map);
+
+	map.fitBounds(bounds);
+	
+	L.tileLayer('', {
+		attribution: '&copy; CorrLeader Program | Basemap <a href="https://azgaar.github.io/Fantasy-Map-Generator/">Fantasy Map Generator</a>'
+	}).addTo(map);	
+	
+	
+	var destIcon = L.icon({
+		iconUrl: 'images/dest-icon.png',
+		iconSize: [18,18],
+		iconAnchor: [9, 9],
+		popupAnchor: [-3, -7],
+		shadowUrl: 'images/dest-shadow.png',
+		shadowSize: [18, 18],
+		shadowAnchor: [9, 9]
+	});	
+	
+	var teamwork      = [295.0, 232.2];
+	var honesty    = [327.0, 305.2];
+	var collaboration = [326.0, 388.2];
+	var communication    = [308.0, 458.2];
+	var coaching = [380.4, 414.4];
+	var influential = [386.0, 355.0];
+	var delegating = [242.5, 250.5];
+	var investing =[214.3, 304.8];
+	var effective =[236.4, 369.2];
+	var collaborative_comm =[276.9, 455.7];
+
+
+	marker = L.marker(teamwork).addTo(map);
+	
+	marker.bindPopup('<strong>Teamwork</strong> is the ability to work cooperatively with others to achieve group objectives. This competency is fundamental because leadership is not an individual sport. The essence of leadership is accomplishing worthy goals through the combined efforts of others, and teamwork capabilities are crucial. In this section you\'ll learn teamwork strategies, such as the four phases of team development: forming, storming, norming and performing (<a href="#">more...</a>)');
+	marker.bindTooltip("Teamwork");
+	
+	marker = L.marker(honesty).addTo(map);
+	marker.bindPopup('<strong>Honesty</strong>  is a leader\'s most valuable and most valued leadership quality; it serves as the gateway for trust and inspiration. (<a href="#">more...</a>)');
+	marker.bindTooltip("Honesty");
+	
+	marker = L.marker(collaboration).addTo(map);
+	marker.bindPopup('<strong>Collaboration</strong>  A collaborative leader invests time to build relationships, handles conflicts in a constructive manner, and shares control. (<a href="#">more...</a>)');
+	marker.bindTooltip("Collaboration");
+	
+	marker = L.marker(communication).addTo(map);
+	marker.bindPopup('<strong>Leadership communication</strong> consists of those messages from a leader that are rooted in the values and culture of an organization and are of significant importance to key stakeholders, e.g., employees, customers, strategic partners, shareholders, and the media.(<a href="#">more...</a>)');
+	marker.bindTooltip("Communication");
+	
+	marker = L.marker(coaching).addTo(map);
+	marker.bindPopup('<strong>Coaching Skills</strong> includes the dialogue in which the coach facilitates the coachee, to learn, clarify values, release potential and increase performance by focusing on goals to achieve success. (<a href="#">more...</a>)');
+	marker.bindTooltip("Coaching Skills");
+
+	marker = L.marker(influential).addTo(map);
+	marker.bindPopup('<strong>Influential leaders</strong> are defined as leaders that rely on influence as opposed to coercion. These leaders create followers who want to follow as opposed to followers who believe they have to follow. (<a href="#">more...</a>)');
+	marker.bindTooltip("Influential Leadership");
+	
+	marker = L.marker(delegating).addTo(map);
+	marker.bindPopup('The <strong>delegating leadership style</strong> is a style of leadership where a group leader assigns projects or assignments to their employees and gives them free reign to work. The employee(s) get to make all decisions and choices, which they are then responsible for. (<a href="#">more...</a>)');
+	marker.bindTooltip("Delegation");	
+
+	marker = L.marker(investing).addTo(map);
+	marker.bindPopup('Successful leaders understand the difference between things and people in an organization. They know that it\'s important to manage things, but that it\'s even more important to <strong>invest in people</strong>. Leaders don\'t just mouth empty phrases like “people are our greatest resource;” they demonstrate by their actions that people – not strategy, products, plans, processes, or systems – are the most critical factor in an organization\'s performance. (<a href="#">more...</a>)');
+	marker.bindTooltip("Investing in People");	
+
+	marker = L.marker(effective).addTo(map);
+	marker.bindPopup('According to many researchers, a leader is one who has an ability to take charge, direct, encourage, or stimulate others... <strong>Good communication skills</strong> help to develop better understanding and beliefs among people inspire them to follow the principles and values which their leader wants to inculcate in them. (<a href="#">more...</a>)');
+	marker.bindTooltip("Effective Communication at Work");	
+
+	marker = L.marker(collaborative_comm).addTo(map);
+	marker.bindPopup('Leaders demonstrate their trust in employees by the open, candid, and ongoing communication that is the foundation of <strong>informed collaboration</strong>. (<a href="#">more...</a>)');
+	marker.bindTooltip("Leading Through Collaborative Communication");	
+	
+	
+	
+
+	
+	var teamwork1 = [306.0, 196.0];
+
+	marker = L.marker(teamwork1, {icon: destIcon}).addTo(map);
+	marker.bindPopup('<em>How to turn a group of strangers into a team</em> TEDtalk by Amy Edmonson, Oct 2017 <a href="https://www.ted.com/talks/amy_edmondson_how_to_turn_a_group_of_strangers_into_a_team">Watch Now</a>');
+	marker.bindTooltip("Amy Edmonson TEDTalk");
+	
+	var teamwork2 = [286.1, 208.0];	
+	marker = L.marker(teamwork2, {icon: destIcon}).addTo(map);
+	marker.bindPopup('<em>ENAV 2450 - Leadership and Teamwork</em> BCIT School of Transportation Course <a href="https://www.bcit.ca/study/courses/enav2450">More info</a>');
+	marker.bindTooltip("Leadership and Teamwork course");
+	
+	
+	var teamworktrail = L.polyline([teamwork1, teamwork2],{color: '#e37e51'}).addTo(map);
+	
+	var teamworkoff1 = [316.0, 257.1];
+	marker = L.marker(teamworkoff1, {icon: destIcon}).addTo(map);
+	marker.bindPopup('<em>QuizBreaker</em> provides weekly online prompts for team building <a href="https://www.quizbreaker.com/">More info</a>');
+	marker.bindTooltip("QuizBreaker");	
+	
+	
+	
+	var coaching1 = [374.1, 400.6];
+	marker = L.marker(coaching1, {icon: destIcon}).addTo(map);
+	marker.bindPopup('As a manager, you wear two hats that can be difficult to manage effectively. On the one hand, as the boss, you have to evaluate your employees and make decisions regarding promotions, demotions, salary actions, and terminations. You are also a coach and this role requires you to be an advocate for your employees’ success. Employees may be reluctant to be frank and discuss weaknesses or mistakes with a person who has such power over their futures.<br /><br />While there is no perfect solution to this dilemma, this series of 4 micro courses will help you to understand the problem and will provide you with a strategy to effectively balance these two inherently conflicting roles. <a href="https://rapidcourse.com/product/coaching-skills-micro-course/">Course Information</a>');
+	marker.bindTooltip("Coaching Skills Microcourse");	
+	
+	
+
+
+	
+	// popup to give coordinates
+/*
+	var popup = L.popup();
+	function onMapClick(e) {
+		popup
+			.setLatLng(e.latlng)
+			.setContent("You clicked the map at " + e.latlng.toString())
+			.openOn(map);
+	}
+
+	map.on('click', onMapClick);
+*/
+
+	// listen for screen resize events
+	// h/t https://stackoverflow.com/a/23917779/2418186
+	/*
+	window.addEventListener('resize', function(event){
+		// get the width of the screen after the resize event
+		var width = document.documentElement.clientWidth;
+		// tablets are between 768 and 922 pixels wide
+		// phones are less than 768 pixels wide
+		if (width < 768) {
+			// set the zoom level to 10
+			map.setZoom(-1);
+		}  else {
+			// set the zoom level to 8
+			map.setZoom(1);
+		}
+	});
+	*/
+
+</script>
+
+
+
+
+</body>
+</html>

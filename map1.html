@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>CorrLead Map</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="favicon.ico" href="images/favicon.ico" />
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="backstretch.js"></script>	
+
+
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+
+			font-family: Helvetica, Arial, sans-serif;
+			font-size: 0.9em;
+			color: #fff;
+		}
+		#map {
+			width: 500px;
+			height: 500px;
+			margin: 10px auto;
+			background-color:#000;
+		}
+		
+		#content {
+			margin:3rem 15%;
+			
+		}
+		
+		a {color:lightskyblue; text-decoration: none;}
+		
+		a:hover {text-decoration: underline;}
+		
+		h1 {
+			text-align:center;
+			margin-bottom:0;
+		}
+	</style>
+
+	
+</head>
+<body>
+
+
+<div id='map'></div>
+
+<div id="content">
+<h1>CorrLead Map Demo</h1>
+<p>Map of Leadership resources covering three major regions; within are 10 points of interest each with suggested trails and off trail exploration.</p>
+
+<p>Map managed using <a href="https://leafletjs.com/">LeafletJS</a>, land map generated with <a href="https://www.redblobgames.com/maps/mapgen4/">MapGen4</a>.</p>
+
+<p>
+<img width="25" height="41" alt="marker-icon-2x" src="images/marker-icon-2x.png"> Area (unit)<br />
+<img width="18" height="18" alt="dest-icon" src="images/dest-icon.png"> Destination (on or off trail)
+</p>
+
+
+<h2>Map Demos</h2>
+
+<ul>
+	<li><strong>First Prototype</strong> - square map, first experiment with Leaflet. Tooltips on map.</li>
+	<li><a href="map2.html">Second Prototype</a> - base map generated with different tool, rectangular map.</li>
+		<li><a href="layers.html">Layers</a> - Modification of second prototype, testing using the top right interface to toggle different layers or parts of map, on an off.</li>
+</ul>
+
+
+<hr />
+
+<p><em>Background image: Monochrome version of <a href="https://commons.wikimedia.org/wiki/File:British_columbia_1896.jpg">MediaWiki Commons public domain image "British Columbia 1896"</a>.</em></p>
+
+
+</div>
+
+<script>
+
+ $.backstretch("images/bc.jpg");
+ 
+	var map = L.map('map', {
+		crs: L.CRS.Simple,
+		minZoom: -1
+	});
+
+	var bounds = [[0,0], [1000,1000]];
+	var image = L.imageOverlay('images/land.png', bounds).addTo(map);
+
+	map.fitBounds(bounds);
+	
+	L.tileLayer('', {
+		attribution: '&copy; CorrLeader Program | Map via <a href="https://www.redblobgames.com/maps/mapgen4/">MapGen4</a> '
+	}).addTo(map);	
+	
+	
+	var destIcon = L.icon({
+		iconUrl: 'images/dest-icon.png',
+		iconSize: [18,18],
+		iconAnchor: [9, 9],
+		popupAnchor: [-3, -7],
+		shadowUrl: 'images/dest-shadow.png',
+		shadowSize: [18, 18],
+		shadowAnchor: [9, 9]
+	});	
+	
+	
+
+	var teamwork      = [182.1, 207.0];
+	var honesty    = [171.0, 426.0];
+	var collaboration = [ 249.0,  625.1];
+	var communication    = [127.2,  809.0];
+
+	marker = L.marker(teamwork).addTo(map);
+	
+	marker.bindPopup('<strong>Teamwork</strong> Duo Reges: constructio interrete. Quod cum dixissent, ille contra. Quacumque enim ingredimur, in aliqua historia vestigium ponimus.');
+	marker.bindTooltip("Teamwork");
+	
+	marker = L.marker(honesty).addTo(map);
+	marker.bindPopup('<strong>Honesty</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Compensabatur, inquit, cum summis doloribus laetitia. Mihi, inquam, qui te id ipsum rogavi? Que Manilium, ab iisque M. A mene tu? ');
+	marker.bindTooltip("Honesty");
+	
+	
+	
+	marker = L.marker(collaboration).addTo(map);
+	marker.bindPopup('<strong>Collaboration</strong> Ea possunt paria non esse. <i>Quid ad utilitatem tantae pecuniae?</i> <a href="http://loripsum.net/" target="_blank">Itaque his sapiens semper vacabit.</a> Huius ego nunc auctoritatem sequens idem faciam.');
+	marker.bindTooltip("Collaboration");
+	
+	marker = L.marker(communication).addTo(map);
+	marker.bindPopup('<strong>Communication</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. <b>Sed ad bona praeterita redeamus.</b> Quacumque enim ingredimur, in aliqua historia vestigium ponimus. Primum in nostrane potestate est, quid meminerimus? <a href="http://loripsum.net/" target="_blank">Duo Reges: constructio interrete.</a> Fortemne possumus dicere eundem illum Torquatum? Sed ad haec, nisi molestum est, habeo quae velim.');
+	marker.bindTooltip("Communication");
+	
+	var teamwork1 = [234.0, 232.5];
+	var teamwork2 = [195.0, 280.5];
+	marker = L.marker(teamwork1, {icon: destIcon}).addTo(map);
+	marker.bindPopup('<em>How to turn a group of strangers into a team</em> TEDtalk by Amy Edmonson, Oct 2017 <a href="https://www.ted.com/talks/amy_edmondson_how_to_turn_a_group_of_strangers_into_a_team">Watch Now</a>');
+	marker.bindTooltip("Amy Edmonson TEDTalk");
+	
+	
+	marker = L.marker(teamwork2, {icon: destIcon}).addTo(map);
+	marker.bindPopup('<em>ENAV 2450 - Leadership and Teamwork</em> BCIT School of Transportation Course <a href="https://www.bcit.ca/study/courses/enav2450">More info</a>');
+	marker.bindTooltip("Leadership and Teamwork course");
+	
+	
+	var teamworktrail = L.polyline([teamwork1, teamwork2],{color: '#e37e51'}).addTo(map);
+	
+	var teamworkoff1 = [147.449219, 225.21875];
+	marker = L.marker(teamworkoff1, {icon: destIcon}).addTo(map);
+	marker.bindPopup('<em>QuizBreaker</em> Weekly online prompts for team building <a href="https://www.quizbreaker.com/">More info</a>');
+	marker.bindTooltip("Leadership and Teamwork course");
+	
+	// popup to give coordinates
+	var popup = L.popup();
+	function onMapClick(e) {
+		popup
+			.setLatLng(e.latlng)
+			.setContent("You clicked the map at " + e.latlng.toString())
+			.openOn(map);
+	}
+
+	map.on('click', onMapClick);
+
+</script>
+
+
+</body>
+</html>

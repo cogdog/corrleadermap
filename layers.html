@@ -1,0 +1,544 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>CorrLead Map</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="favicon.ico" href="images/favicon.ico" />
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="backstretch.js"></script>	
+
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			font-family: Helvetica, Arial, sans-serif;
+			font-size: 0.9em;
+			color: #fff;
+		}
+		#map {
+			width: 800px;
+			height: 400px;
+			margin: 10px auto;
+			background-color:#000;
+		}
+		
+		#content {
+			margin:3rem 15%;
+			
+		}
+		
+		a {color:lightskyblue; text-decoration: none;}
+		
+		a:hover {text-decoration: underline;}
+		
+		h1 {
+			text-align:center;
+			margin-bottom:0;
+		}
+	</style>
+
+	
+</head>
+<body>
+
+
+<div id='map'></div>
+
+<div id="content">
+<h1>CorrLead Map Demo 3</h1>
+<p>Map of Leadership terrain covering three major regions; within are 10 points of interest each with suggested trails and off trail exploration. All elements are merely for demonstration purpose, and to test functionality of map interface.</p>
+
+<p>Open the legend (top right) to toggle on or off the trail details</p>
+
+<p>Map managed using <a href="https://leafletjs.com/">LeafletJS</a>, land map generated with <a href="https://azgaar.github.io/Fantasy-Map-Generator/">Fantasy Map Generator</a>.</p>
+
+<p>
+<img width="25" height="41" alt="marker-icon" src="images/blue-marker-icon.png"> Personal Leadership Destinations (unit)<br />
+<img width="18" height="18" alt="dest-icon" src="images/blue-dest-icon.png"> Personal Leadership Trails (on or off trail)<br />
+<img width="25" height="41" alt="marker-icon" src="images/red-marker-icon.png"> Relational Leadership Destinations (unit)<br />
+<img width="18" height="18" alt="dest-icon" src="images/red-dest-icon.png"> Relational Leadership Trails (on or off trail)<br />
+<img width="25" height="41" alt="marker-icon" src="images/green-marker-icon.png"> Organizational Leadership Destinations (unit)<br />
+<img width="18" height="18" alt="dest-icon" src="images/green-dest-icon.png"> Organizational Leadership Trails (on or off trail)<br />
+
+</p>
+
+<h2>Map Demos</h2>
+
+<ul>
+	<li><a href="map1.html">First Prototype</a> - square map, first experiment with Leaflet. Tooltips on map.</li>
+	<li><a href="map2.html">Second Prototype</a> - base map generated with different tool, rectangular map.</li>
+		<li><strong>Layers</strong> - Modification of second prototype, testing using the top right interface to toggle different layers or parts of map, on an off.</li>
+</ul>
+
+<hr />
+
+<p><em>Background image: Monochrome version of <a href="https://commons.wikimedia.org/wiki/File:British_columbia_1896.jpg">MediaWiki Commons public domain image "British Columbia 1896"</a>.</em></p>
+
+</div>
+
+<script>
+
+
+	 $.backstretch("images/bc.jpg");
+	 
+	/* Icon for Trail Markers */
+	var redDestIcon = L.icon({
+		iconUrl: 'images/red-dest-icon.png',
+		iconSize: [24,24],
+		iconAnchor: [12, 12],
+		popupAnchor: [-3, -7],
+		shadowUrl: 'images/dest-shadow.png',
+		shadowSize: [18, 18],
+		shadowAnchor: [9, 9]
+	});	
+	
+	var greenDestIcon = L.icon({
+		iconUrl: 'images/green-dest-icon.png',
+		iconSize: [24,24],
+		iconAnchor: [12, 12],
+		popupAnchor: [-3, -7],
+		shadowUrl: 'images/dest-shadow.png',
+		shadowSize: [18, 18],
+		shadowAnchor: [9, 9]
+	});	
+	
+	var blueDestIcon = L.icon({
+		iconUrl: 'images/blue-dest-icon.png',
+		iconSize: [24,24],
+		iconAnchor: [12, 12],
+		popupAnchor: [-3, -7],
+		shadowUrl: 'images/dest-shadow.png',
+		shadowSize: [18, 18],
+		shadowAnchor: [9, 9]
+	});	
+
+	var blueMarker = L.icon({
+		iconUrl:       'images/blue-marker-icon.png',
+		iconRetinaUrl: 'images/blue-marker-icon-2x.png',
+		shadowUrl:     'images/marker-shadow.png',
+		iconSize:    [25, 41],
+		iconAnchor:  [12, 41],
+		popupAnchor: [1, -34],
+		tooltipAnchor: [16, -28],
+		shadowSize:  [41, 41]
+	});	
+	
+	var redMarker = L.icon({
+		iconUrl:       'images/red-marker-icon.png',
+		iconRetinaUrl: 'images/red-marker-icon-2x.png',
+		shadowUrl:     'images/marker-shadow.png',
+		iconSize:    [25, 41],
+		iconAnchor:  [12, 41],
+		popupAnchor: [1, -34],
+		tooltipAnchor: [16, -28],
+		shadowSize:  [41, 41]
+	});	
+
+	var greenMarker = L.icon({
+		iconUrl:       'images/green-marker-icon.png',
+		iconRetinaUrl: 'images/green-marker-icon-2x.png',
+		shadowUrl:     'images/marker-shadow.png',
+		iconSize:    [25, 41],
+		iconAnchor:  [12, 41],
+		popupAnchor: [1, -34],
+		tooltipAnchor: [16, -28],
+		shadowSize:  [41, 41]
+	});	
+
+	/* Relational Pins */		
+	let relationalg = L.layerGroup();
+
+	let rnodes = [
+		{"label":"Teamwork",
+		 "loc":[295.0, 232.2],
+		 "pop": '<strong>Teamwork</strong> is the ability to work cooperatively with others to achieve group objectives. This competency is fundamental because leadership is not an individual sport. The essence of leadership is accomplishing worthy goals through the combined efforts of others, and teamwork capabilities are crucial. In this section you\'ll learn teamwork strategies, such as the four phases of team development: forming, storming, and performing.',
+		  "link": "#"
+		 },
+		{"label":"Honesty",
+		 "loc":[327.0, 305.2],
+		 "pop": '<strong>Honesty</strong>  is a leader\'s most valuable and most valued leadership quality; it serves as the gateway for trust and inspiration.',
+		 "link": "#"
+		 },
+		{"label":"Collaboration",
+		 "loc":[326.0, 388.2],
+		 "pop": '<strong>Collaboration</strong>  A collaborative leader invests time to build relationships, handles conflicts in a constructive manner, and shares control.',
+		 "link": "#"
+		 },
+		{"label":"Communication",
+		 "loc":[308.0, 458.2],
+		 "pop": '<strong>Leadership communication</strong> consists of those messages from a leader that are rooted in the values and culture of an organization and are of significant importance to key stakeholders, e.g., employees, customers, strategic partners, shareholders, and the media.',
+		 "link": "#"
+		 },
+		{"label":"Coaching Skills",
+		 "loc":[380.4, 414.4],
+		 "pop": '<strong>Coaching Skills</strong> includes the dialogue in which the coach facilitates the coachee, to learn, clarify values, release potential and increase performance by focusing on goals to achieve success.',
+		 "link": "#"
+		 },
+		{"label":"Influential Leadership",
+		 "loc":[386.0, 355.0],
+		 "pop": '<strong>Influential leaders</strong> are defined as leaders that rely on influence as opposed to coercion. These leaders create followers who want to follow as opposed to followers who believe they have to follow.',
+		 "link": "#"
+		 },
+		{"label":"Delegating",
+		 "loc":[242.5, 250.5],
+		 "pop": 'The <strong>delegating leadership style</strong> is a style of leadership where a group leader assigns projects or assignments to their employees and gives them free reign to work. The employee(s) get to make all decisions and choices, which they are then responsible for.',
+		 "link": "#"
+		 },
+		{"label":"Investing in People",
+		 "loc":[214.3, 304.8],
+		 "pop": 'Successful leaders understand the difference between things and people in an organization. They know that it\'s important to manage things, but that it\'s even more important to <strong>invest in people</strong>. Leaders don\'t just mouth empty phrases like “people are our greatest resource;” they demonstrate by their actions that people – not strategy, products, plans, processes, or systems – are the most critical factor in an organization\'s performance.',
+		 "link": "#"
+		 },
+		{"label":"Effective Communication at Work",
+		 "loc":[236.4, 369.2],
+		 "pop": 'According to many researchers, a leader is one who has an ability to take charge, direct, encourage, or stimulate others... <strong>Good communication skills</strong> help to develop better understanding and beliefs among people inspire them to follow the principles and values which their leader wants to inculcate in them.',
+		 "link": "#"
+		 },
+		{"label":"Leading Through Collaborative Communication",
+		 "loc":[276.9, 455.7],
+		 "pop": 'Leaders demonstrate their trust in employees by the open, candid, and ongoing communication that is the foundation of <strong>informed collaboration</strong>.',
+		 "link": "#"
+		 } 
+	];
+
+	for (let i = 0; i < rnodes.length; i++) {
+		marker = L.marker( rnodes[i].loc, {icon: redMarker}).addTo(relationalg);
+		marker.bindPopup( rnodes[i].pop + '(<a href="' + rnodes[i].link + '">more...</a>)' );
+		marker.bindTooltip( rnodes[i].label );
+	}	
+
+	let personalg = L.layerGroup();
+
+	let inodes = [
+		{"label":"Awareness",
+		 "loc":[203.0, 87.0],
+		 "pop": 'Developing <strong>self-awareness</strong> is a crucial first step in effective leadership because it lays the foundation upon which emotional and social intelligence is built. We can\'t develop skills like emotional self-control, empathy, or teamwork unless we are aware of our own feelings and how they influence our thoughts and behaviors. Emotional self-awareness also helps leaders link their emotions to the effectiveness of their interactions with others.',
+		 "link": "#"
+		 },
+		{"label":"Authenticty",
+		 "loc":[204.0, 177.0],
+		 "pop": '<strong>Authentic leadership</strong> starts with the leader\'s awareness that allows her to build positive relationships and inspire and encourage employees in the right ways.',
+		 "link": "#"
+		 },
+		{"label":"Emotional Intelligence",
+		 "loc":[185.0, 299.0],
+		 "pop": '<strong>Emotional Intelligence</strong> is the ability to accurately perceive your own and others\' emotions; to understand the signals that emotions send about relationships; and to manage your own and others\' emotions.',
+		 "link": "#"
+		 },
+		{"label":"Communication",
+		 "loc":[163.0, 368.0],
+		 "pop": 'Effective leaders are well-versed in the art of active listening and understand how to use verbal and non verbal <strong>communication methods</strong> for maximum impact.',
+		 "link": "#"
+		 },
+		{"label":"Resilience",
+		 "loc":[105.0, 242.0],
+		 "pop": 'Rapid, disruptive change is today\'s normal. It comes in bubbles, waves and sometimes tsunamis. To cope, leaders need to be agile and resilient. They require <strong>resilient leaders</strong>, emotionally intelligent people able to absorb complex change and help others move forward to achieve success.',
+		 "link": "#"
+		 },
+		{"label":"Time Management",
+		 "loc":[61.0, 234.1],
+		 "pop": 'Time in the organization is constant and irreversible. Nothing can be substituted for time. Worse, once wasted, it can never be regained. Leaders have numerous demands on their limited time — time keeps getting away and they have trouble controlling it. No matter what their position or role is, they cannot stop time, they cannot slow it down, nor can they speed it up. Thus, <strong>time needs to be effectively managed to be effective</strong>.',
+		 "link": "#"
+		 },
+		{"label":"Writing Skills",
+		 "loc":[279.0, 71.0],
+		 "pop": '<strong>Writing skills</strong> are mandatory for any leader. Technology has made it even more essential, increasing the amount of writing required on any given day. You also want to avoid being misunderstood, as you want to be able to influence your team or clients the way they should be.',
+		 "link": "#"
+		 },
+		{"label":"Managing Change",
+		 "loc":[184.0, 243.0],
+		 "pop": '<strong>Change management</strong> is a critical part of any project that leads, manages, and enables people to accept new processes, technologies, systems, structures, and values. It is the set of activities that helps people transition from their present way of working to the desired way of working.',
+		 "link": "#"
+		 },
+		{"label":"Building Trust",
+		 "loc":[115.0, 335.0],
+		 "pop": 'The best leaders build trust, because trust has the most enduring power and the widest influence.',
+		 "link": "#"
+		 }
+	];
+
+	for (let i = 0; i < inodes.length; i++) {
+		marker = L.marker( inodes[i].loc, {icon: blueMarker}).addTo(personalg);
+		marker.bindPopup( inodes[i].pop + '(<a href="' + inodes[i].link + '">more...</a>)' );
+		marker.bindTooltip( inodes[i].label );
+	}	
+	
+	let organizationalg = L.layerGroup();
+
+	let gnodes = [
+		{"label":"Strategic Awareness",
+		 "loc":[229.0, 435.0],
+		 "pop": 'With <strong>strategic awareness</strong>, leaders operate beyond the rules of competition, allowing previously unseen opportunities to be recognised in a timely manner.',
+		 "link": "#"
+		 },
+		{"label":"Vision",
+		 "loc":[271.0, 503.0],
+		 "pop": '<strong>Leadership vision</strong> is an essential means for focusing attention on what matters most; what you want to accomplish in your life and what kind of leader you wish to be. A useful vision has to be rooted in your past, address the future, and deal with today\'s realities.',
+		 "link": "#"
+		 },
+		{"label":"Business Skills",
+		 "loc":[298.0, 560.0],
+		 "pop": 'As a leader, you need to be able to clearly and succinctly explain to your employees everything from organizational goals to specific tasks.',
+		 "link": "#"
+		 },
+		{"label":"Organizational Knowledge",
+		 "loc":[346.0, 608.0],
+		 "pop": 'One of the most common assumptions in <strong>organizational knowledge</strong> states that knowledge construction requires work in cooperation.',
+		 "link": "#"
+		 },
+		{"label":"Hiring",
+		 "loc":[284.0, 687.0],
+		 "pop": 'From our perspective, <strong>leadership hiring</strong> then is a process of recruiting an intermediate to senior level candidate for a middle or top management position i.e. individuals who are responsible for others.',
+		 "link": "#"
+		 },
+		{"label":"Accountability",
+		 "loc":[176.0, 684.0],
+		 "pop": 'When leaders take personal <strong>accountability</strong>, they are willing to answer for the outcomes of their choices, their behaviors, and their actions in all situations in which they are involved. Accountable leaders do not blame others when things go topsy-turvy. ... An accountable leader takes responsibility.',
+		 "link": "#"
+		 },
+		{"label":"Succession Planning",
+		 "loc":[120.0, 686.0],
+		 "pop": 'A leadership <strong>succession strategy</strong> is a process for identifying and developing internal people with the potential to fill key business leadership positions in the company. Successors may be fairly ready to do the job (short-term successors) or seen as having longer-term potential (long-term successors).',
+		 "link": "#"
+		 },
+		{"label":"Quality Leadership",
+		 "loc":[171.0, 604.0],
+		 "pop": 'Irrespective of how you define a leader, he or she can prove to be a difference maker between success and failure. A good leader has a futuristic vision and knows how to turn their ideas into real-world success stories.',
+		 "link": "#"
+		 },
+		{"label":"Business Competence & Partnerships",
+		 "loc":[138.0, 545.0],
+		 "pop": 'Real business value is created through knowledge, intellectual property, collaboration and partnerships throughout the company. Now more than ever, financial leadership has an opportunity to contribute tangibly to the success and future of the business.',
+		 "link": "#"
+		 },
+		{"label":"Appreciative Inquiry",
+		 "loc":[40.0, 580.0],
+		 "pop": '<strong>Appreciative Inquiry</strong> is a philosophy and a methodology for positive change. It is founded on the simple assumption that human systems – teams, organizations and people – move in the direction of what they study, what they focus upon and what they talk about with regularity.',
+		 "link": "#"
+		 },
+
+	];
+
+	for (let i = 0; i < gnodes.length; i++) {
+		marker = L.marker( gnodes[i].loc, {icon: greenMarker}).addTo(organizationalg);
+		marker.bindPopup( gnodes[i].pop + '(<a href="' + gnodes[i].link + '">more...</a>)' );
+		marker.bindTooltip( gnodes[i].label );
+	}	
+
+
+	/* Relational Trails */
+	let trailg = L.layerGroup();
+	
+	let rtrails = [
+		{
+			"pin":"Teamwork", 
+		
+			"pdata": [
+				{
+					"label":"Leadership and Teamwork course",
+					"rec" : true,
+		 			"loc":[286.1, 208.0],
+				    "pop": '<em>ENAV 2450 - Leadership and Teamwork</em> BCIT School of Transportation Course <a href="https://www.bcit.ca/study/courses/enav2450">More info</a>'
+		 		},
+			
+				{
+					"label":"Amy Edmonson TEDTalk",
+					"rec" : true,
+		 			"loc":[306.0, 196.0],
+				    "pop": '<em>How to turn a group of strangers into a team</em> TEDtalk by Amy Edmonson, Oct 2017 <a href="https://www.ted.com/talks/amy_edmondson_how_to_turn_a_group_of_strangers_into_a_team">Watch Now</a>'
+		 		},
+				{
+					"label":"QuizBreaker",
+					"rec" : false,
+		 			"loc":[316.0, 257.1],
+				    "pop": '<em>QuizBreaker</em> provides weekly online prompts for team building <a href="https://www.quizbreaker.com/">Try a Quiz</a>'
+		 		},
+
+		 	]
+		 		
+		 },
+		{
+			"pin":"Coaching Skills", 
+		
+			"pdata": [
+				{
+					"label":"Coaching Skills Microcourse",
+					"rec" : true,
+		 			"loc":[374.1, 400.6],
+				    "pop": 'As a manager, you wear two hats that can be difficult to manage effectively. On the one hand, as the boss, you have to evaluate your employees and make decisions regarding promotions, demotions, salary actions, and terminations. You are also a coach and this role requires you to be an advocate for your employees\' success. Employees may be reluctant to be frank and discuss weaknesses or mistakes with a person who has such power over their futures.<br /><br />While there is no perfect solution to this dilemma, this series of 4 micro courses will help you to understand the problem and will provide you with a strategy to effectively balance these two inherently conflicting roles. <a href="https://rapidcourse.com/product/coaching-skills-micro-course/">Course Information</a>'
+		 		},
+		 	]
+		 		
+		 },		 
+		 
+	];
+
+	for (let i = 0; i < rtrails.length; i++) {
+
+		/* keep track of recommended trails */
+		var rectrails = [];
+				/* walk the trail pins of each set */
+				for (let p = 0; p < rtrails[i].pdata.length; p++) {
+				
+					if (rtrails[i].pdata[p].rec) {
+						/* recommended location */
+						rectrails.push(rtrails[i].pdata[p].loc);
+						reclabel = 'Recommended ';
+					} else {
+						reclabel = '';
+					
+					}
+		
+					marker = L.marker( rtrails[i].pdata[p].loc, {icon: redDestIcon}).addTo(trailg);
+					marker.bindPopup(  reclabel + 'Location for ' + rtrails[i].pin + ': ' + rtrails[i].pdata[p].pop);
+					marker.bindTooltip( rtrails[i].pdata[p].label );
+				}
+				
+				if (rectrails.length) L.polyline( rectrails,{color: '#e37e51', weight:5}).addTo(trailg);
+	}	
+	
+	let itrails = [
+		{
+			"pin":"Reslience", 
+		
+			"pdata": [
+				{
+					"label":"Resiliency: Clear Focus on the Vision",
+					"rec" : false,
+		 			"loc":[123.0, 214.0],
+				    "pop": 'In this short video, High Performing Teams consultant and coach Shawn Kent Hayashi talks about Resiliency. She explains the definition of Resiliency, how to improve your skill-set, and why it is important to master this competency. <a href="https://www.youtube.com/watch?v=ZOZ-eJAKLiw">Watch</a>'
+		 		},
+		 	]
+		 		
+		 }, 
+		{
+			"pin":"Time Management", 
+		
+			"pdata": [
+				{
+					"label":"Time Management (Micro Course Series)",
+					"rec" : true,
+		 			"loc":[74.0, 256.0],
+				    "pop": 'Have you ever watched the sand fall in an hour glass to keep up with time?  Once the sand has reached the other side, your time is up!  As in life, there are deadlines that must be met in order to be productive in business. This course will teach you how to effectively manage time in order to be more efficient. <a href="https://rapidcourse.com/product/time-management-micro-course/">Course Info</a>'
+		 		},
+		 		
+				{
+					"label":"Time Management for Leaders",
+					"rec" : true,
+		 			"loc":[94.0, 259.0],
+				    "pop": 'From Donald Clark -- Time in the organization is constant and irreversible. Nothing can be substituted for time. Worse, once wasted, it can never be regained. Leaders have numerous demands on their limited time — time keeps getting away and they have trouble controlling it. No matter what their position or role is, they cannot stop time, they cannot slow it down, nor can they speed it up. Thus, time needs to be effectively managed to be effective. <a href="http://www.nwlink.com/~donclark/leader/leadtime.html">more...</a>'
+		 		},
+		 		
+		 	]
+		 		
+		 }, 
+		 
+		 
+		 
+	];
+	
+	for (let i = 0; i < itrails.length; i++) {
+
+		/* keep track of recommended trails */
+		var rectrails = [];
+				/* walk the trail pins of each set */
+				for (let p = 0; p < itrails[i].pdata.length; p++) {
+				
+					if (itrails[i].pdata[p].rec) {
+						/* recommended location */
+						rectrails.push(itrails[i].pdata[p].loc);
+						reclabel = 'Recommended ';
+					} else {
+						reclabel = '';
+					}
+		
+					marker = L.marker( itrails[i].pdata[p].loc, {icon: blueDestIcon}).addTo(trailg);
+					marker.bindPopup(  reclabel + 'Location for ' + itrails[i].pin + ': ' + itrails[i].pdata[p].pop);
+					marker.bindTooltip( itrails[i].pdata[p].label );
+				}
+				
+		if (rectrails.length) L.polyline( rectrails,{color: '#2f9eda', weight:5}).addTo(trailg);
+	}	
+
+
+		
+	
+	var mbAttr = '&copy; CorrLeader Program | Basemap <a href="https://azgaar.github.io/Fantasy-Map-Generator/">Fantasy Map Generator</a>';
+
+	var landmap   = L.tileLayer('', {id: 'mapbox.land', attribution: mbAttr});
+
+	var map = L.map('map', {
+		crs: L.CRS.Simple,
+		minZoom: -1,
+		layers: [landmap, personalg, relationalg, organizationalg]
+	});
+
+	var bounds = [[0,0], [400,800]];
+	var image = L.imageOverlay('images/land2.jpg', bounds).addTo(map);
+
+	map.fitBounds(bounds);
+
+	var baseLayers = {
+		"CorrLead": landmap
+	};
+
+	var overlays = {
+		"Personal Leadership Destinations" : personalg,
+		"Relational Leadership Destinations" : relationalg,
+		"Organizational Leadership Destinations" : organizationalg,
+		"Discovery Trails": trailg,
+		
+	};
+	
+	
+	L.control.layers(baseLayers, overlays,{collapsed:true}).addTo(map);	
+	
+	// popup to give coordinates
+
+	var popup = L.popup();
+	function onMapClick(e) {
+		popup
+			.setLatLng(e.latlng)
+			.setContent("You clicked the map at " + e.latlng.toString())
+			.openOn(map);
+	}
+
+	map.on('click', onMapClick);
+
+
+	// listen for screen resize events
+	// h/t https://stackoverflow.com/a/23917779/2418186
+	/*
+	window.addEventListener('resize', function(event){
+		// get the width of the screen after the resize event
+		var width = document.documentElement.clientWidth;
+		// tablets are between 768 and 922 pixels wide
+		// phones are less than 768 pixels wide
+		if (width < 768) {
+			// set the zoom level to 10
+			map.setZoom(-1);
+		}  else {
+			// set the zoom level to 8
+			map.setZoom(1);
+		}
+	});
+	*/
+
+</script>
+
+
+
+
+
+</body>
+</html>

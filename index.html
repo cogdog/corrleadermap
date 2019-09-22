@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	
+	<title>CorrLead Map</title>
+
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="shortcut icon" type="favicon.ico" href="images/favicon.ico" />
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="backstretch.js"></script>	
+
+
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+
+			font-family: Helvetica, Arial, sans-serif;
+			font-size: 0.9em;
+			color: #fff;
+		}
+
+		
+		#content {
+			margin:3rem 25%;
+			
+		}
+		
+		#content img {
+			width: 100%;
+			height:auto;
+			max-width:900px;
+			margin:1.5em auto;
+		}
+		
+		.caption {
+			display:block;
+			font-size:0.8rem;
+			color: #bbb;
+			font-style:italic;
+			text-align:center;
+		
+		}
+		
+		a {color:lightskyblue; text-decoration: none;}
+		
+		a:hover {text-decoration: underline;}
+		
+		h1 {
+			text-align:center;
+			margin-bottom:0;
+		}
+	</style>
+
+	
+</head>
+<body>
+
+
+
+<div id="content">
+<h1>CorrLeader Map Demos</h1>
+
+<a href="https://flickr.com/photos/paulk/5061972163"><img alt="map-not-territory" src="images/map-not-territory.jpg" alt="The map is not the territory"></a>
+<span class="caption"><a title="THE MAP IS NOT THE TERRITORY" href="https://flickr.com/photos/paulk/5061972163">THE MAP IS NOT THE TERRITORY</a> flickr photo by <a href="https://flickr.com/people/paulk">Paul Keller</a> shared under a <a href="https://creativecommons.org/licenses/by/2.0/">Creative Commons (BY) license</a></span>
+
+<p>These maps are prototypes for a map metaphor interface for the CorrLeader project. While not the territory, the map aids in exploring it.</p>
+
+<ul>
+	<li><a href="map1.html">First Prototype</a> - square map, first experiment with Leaflet. Tooltips on map.</li>
+	<li><a href="map2.html">Second Prototype</a> - base map generated with different tool, rectangular map.</li>
+		<li><a href="layers.html">Layers</a> - Modification of second prototype, testing using the top right interface to toggle different layers or parts of map, on an off.</li>
+</ul>
+	
+	
+<hr />
+
+<p><em>Background image: Monochrome version of <a href="https://commons.wikimedia.org/wiki/File:British_columbia_1896.jpg">MediaWiki Commons public domain image "British Columbia 1896"</a>.</em></p>
+
+
+
+
+</div>
+
+
+<script>
+ $.backstretch("images/bc.jpg");
+</script>
+
+
+</body>
+</html>
