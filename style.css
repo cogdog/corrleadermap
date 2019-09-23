@@ -1,0 +1,46 @@
+html, body {
+	height: 100%;
+	margin: 0;
+
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 0.9em;
+	color: #fff;
+}
+
+
+#content {
+	margin:3rem 25%;	
+}
+
+#content img {
+	width: 100%;
+	height:auto;
+	max-width:900px;
+	margin:1.5em auto;
+}
+
+.caption {
+	display:block;
+	font-size:0.8rem;
+	color: #bbb;
+	font-style:italic;
+	text-align:center;
+
+}
+
+a {color:lightskyblue; text-decoration: none;}
+
+a:hover {text-decoration: underline;}
+
+h1 {
+	text-align:center;
+	margin-bottom:0;
+}
+
+/* Useful classes and styles */
+a.github-ribbon {
+	position: absolute;
+	top: 0;
+	left: 0;
+	border: 0;
+}
